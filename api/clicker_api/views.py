@@ -51,6 +51,7 @@ def add_animal(request, login, kind):
     animal.user = User.objects.get(login=login)
     animal.save()
     return JsonResponse({'status': 200, 'message': 'Животное успешно добавлено', 'name': animal.name.name})
+    
 
 def get_animals(request, login):
     user = User.objects.get(login=login)

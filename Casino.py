@@ -57,7 +57,7 @@ class Casino:
     
         self.screen = screen
     
-        self.shadow = pygame.Surface(screen.size)
+        self.shadow = pygame.Surface(screen.get_size())
         self.shadow.set_alpha(128)
         self.shadow.fill((0, 0, 0))
     
@@ -70,7 +70,6 @@ class Casino:
             IronMan: (7, (255, 0, 0)),
             Dino: (3, (255, 215, 0))
         }
-        
         chance = randint(1, 100)
         for animal, data in ITEMS.items():
             if chance <= data[0]:

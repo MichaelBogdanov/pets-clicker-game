@@ -2,6 +2,7 @@ import sys
 from random import random, randint
 
 import pygame
+import threading
 
 from server import *
 from graphics import pixelation
@@ -13,6 +14,7 @@ from Dino import Dino
 from IronMan import IronMan
 from DogMenu import DogMenu
 from Casino import Casino
+
 
 
 login = menu()
@@ -38,6 +40,15 @@ floor = pygame.image.load('images/floor.png').convert_alpha()
 floor = pygame.transform.scale(floor, (WIDTH, HEIGHT))
 
 dog_menu = DogMenu()
+
+def post_request(earn):
+    if earn >= 0:
+        add_score(login, earn)
+    else:
+        reduce_score(login, earn)
+
+def add_animal_request(animal):
+    add_animal(login, animal)
 
 animals = get_animals(login)
 pets = []
@@ -92,22 +103,24 @@ while True:
                     price = int(button.value)
                     if ((screen.get_width() / 2 - dog_menu.surface.get_width() / 2) + button.x <= x <= (screen.get_width() / 2 - dog_menu.surface.get_width() / 2) + button.x + button.width and \
                         dog_menu.y + button.y <= y <= dog_menu.y + button.y + button.height) and score >= price:
-                            reduce_score(login, price)
+                            threading.Thread(target=post_request, args=(price, )).start()
                             score -= price
                             pos = randint(0, WIDTH - 200), randint(int(HEIGHT / 6 * 3.75), HEIGHT - 200)
                             # Создаём казино
                             casino = Casino(screen)
                             break
                 else:
-                    add_score(login, 10)
-                    score += 10
+                    threading.Thread(target=post_request, args=(1, )).start()
+                    score += 1
                 for dog in [i for i in pets if not i.alive]:
                     if (dog.x + dog.sprite.get_width() / 2 - 25 <= x <= dog.x + dog.sprite.get_width() / 2 + 25 and \
                     dog.y + dog.sprite.get_height() / 2 - 25 <= y <= dog.y + dog.sprite.get_height() / 2 + 25):
-                        add_score(login, 50)
+                        threading.Thread(target=post_request, args=(50, )).start()
                         score += 50
                         pets.remove(dog)
-    
+                        
+
+                        
     for pet in sorted(pets, key=lambda x: x.y):
         if pet.alive:
             try:
@@ -116,7 +129,8 @@ while True:
                 pass
             pet.draw(screen)
             if frame_counter % FPS == 0:
-                add_score(login, pet.earning)
+
+                threading.Thread(target=post_request, args=(pet.earning, )).start()
                 score += pet.earning
         else:
             pygame.draw.circle(screen, (0, 0, 0), (pet.x + pet.sprite.get_width() / 2, pet.y + pet.sprite.get_height() / 2), 25)
@@ -137,7 +151,7 @@ while True:
             casino.update()
             if (animal := casino.draw()) is not None:
                 animal_type_name = type(animal(0, 0, '', 0, 0)).__name__
-                pets.append(animal(*pos, add_animal(login, animal_type_name), random(), 1))
+                pets.append(animal(*pos, threading.Thread(target=add_animal_request, args=(animal_type_name, )).start(), random(), 1))
     except:
         pass
     
