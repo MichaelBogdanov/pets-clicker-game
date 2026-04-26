@@ -54,3 +54,4 @@ def add_animal(login: str, kind: str) -> None:
 def get_animals(login: str) -> None:
     response = requests.get(f"http://localhost:8080/get_animals/{login}").json()
     return response
+

@@ -15,12 +15,12 @@ from IronMan import IronMan
 
 
 ITEMS = {
-    Mouse: (45, (150, 150, 150)),
-    Capibara: (20, (200, 200, 255)),
-    Dog: (15, (0, 0, 255)),
-    Chinchilla: (10, (200, 100, 255)),
-    IronMan: (7, (255, 0, 0)),
-    Dino: (3, (255, 215, 0))
+    Mouse: (0, (150, 150, 150)),
+    Capibara: (0, (200, 200, 255)),
+    Dog: (0, (0, 0, 255)),
+    Chinchilla: (0, (200, 100, 255)),
+    IronMan: (50, (255, 0, 0)),
+    Dino: (50, (255, 215, 0))
 }
 
 
@@ -57,20 +57,19 @@ class Casino:
     
         self.screen = screen
     
-        self.shadow = pygame.Surface(screen.size)
+        self.shadow = pygame.Surface(screen.get_size())
         self.shadow.set_alpha(128)
         self.shadow.fill((0, 0, 0))
     
     def random_pet(self):
         ITEMS = {
-            Mouse: (45, (150, 150, 150)),
-            Capibara: (20, (200, 200, 255)),
-            Dog: (15, (0, 0, 255)),
-            Chinchilla: (10, (200, 100, 255)),
-            IronMan: (7, (255, 0, 0)),
-            Dino: (3, (255, 215, 0))
+            Mouse: (0, (150, 150, 150)),
+            Capibara: (0, (200, 200, 255)),
+            Dog: (0, (0, 0, 255)),
+            Chinchilla: (0, (200, 100, 255)),
+            IronMan: (50, (255, 0, 0)),
+            Dino: (50, (255, 215, 0))
         }
-        
         chance = randint(1, 100)
         for animal, data in ITEMS.items():
             if chance <= data[0]:
